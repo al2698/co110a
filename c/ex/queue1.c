@@ -9,6 +9,7 @@ struct list_node q[10] = {
   {.data="a", .next=&q[1]},
   {.data="b", .next=&q[2]},
   {.data="c", .next=&q[3]},
+  {.data="d", .next=&q[4]},
   {.data="d", .next=NULL},
 };
 
