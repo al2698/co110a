@@ -13,7 +13,7 @@ CHIP FullAdder {
         carry;   // Left bit of a + b + c
 
     PARTS:
-    
+    // Put you code here:
     HalfAdder(a=a, b=b, sum=sumab, cout=coutab);
     HalfAdder(a=coutab, b=cin, sum=sum, cout=coutabc);
     Or(a=coutab, b=coutabc, out=cout);

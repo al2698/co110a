@@ -42,29 +42,32 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
+    
+    // setting x zero
+    Mux16(a=x, sel=zx, out=x1);
+    Not16(in=x1, out=negatedX);
+    Mux16(a=x1, b=negatedX, sel=nx, out=x2);
 
-    Mux16(a=x, b=false, sel=zx, out=x1);
-    Mux16(a=y, b=false, sel=zy, out=y1);
+    // setting y zero
+    Mux16(a=y, sel=zy, out=y1);
+    Not16(in=y1, out=negatedY);
+    Mux16(a=y1, b=negatedY, sel=ny, out=y2);
 
-    Not16(in=x1, out=notx1);
-    Mux16(a=x1, b=notx1, sel=nx, out=x2);
-    Not16(in=y1, out=noty1);
-    Mux16(a=y1, b=noty1, sel=ny, out=y2);
+    // x + y OR x & y
+    Add16(a=x2, b=y2, out=added);
+    And16(a=x2, b=y2, out=xyAnd);
+    Mux16(a=xyAnd, b=added, sel=f, out=result);
 
-    Add16(a=x2, b=y2, out=addout);
-    And16(a=x2, b=y2, out=andout);
-    Mux16(a=andout, b=addout, sel=f, out=fout);
+    // negate the output?
+    Not16(in=result, out=negatedResult);
+    Mux16(a=result, b=negatedResult, sel=no, out=out, out[15]=firstOut, out[0..7]=finalLeft, out[8..15]=finalRight);
 
-    Not16(in=fout, out=notfout);
-    Mux16(a=fout, b=notfout, sel=no, out=out, out[0..7]=out7, out[8..15]=out15, out[15]=isng);
+    // output == 0 (zr)
+    Or8Way(in=finalLeft, out=zrl);
+    Or8Way(in=finalRight, out=zrr);
+    Or(a=zrl, b=zrr, out=nzr);
+    Not(in=nzr, out=zr);
 
-    Or8Way(in=out7, out=zr0);
-    Or8Way(in=out15, out=zr1);
-    Or(a=zr0, b=zr1, out=zr2);
-    Not(in=zr2, out=zr);
-
-    And(a=isng, b=true, out=ng);
-
-
-   // Put you code here:
+    // if out < 0 then ng = 1 else ng = 0
+    And(a=firstOut, b=true, out=ng);
 }
