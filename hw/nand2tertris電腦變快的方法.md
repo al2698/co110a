@@ -15,7 +15,7 @@
 2. 管線機制 (pipeline)
 	- 目的是讓每一個stage的硬體在每一個cycle都盡量去運作，避免空窗期。
    
-   ![](https://zh.wikipedia.org/wiki/File:5_Stage_Pipeline.svg)
+   ![](https://upload.wikimedia.org/wikipedia/commons/6/67/5_Stage_Pipeline.svg)
    
 3. 多核心 + Hyper-Threading
 	- 超執行緒技術是一種硬體創新，能讓 **每個** 核心執行多執行緒。執行緒愈多，可以平行處理的工作愈多。
