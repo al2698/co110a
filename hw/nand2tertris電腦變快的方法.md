@@ -1,4 +1,4 @@
-# nand2tertris電腦變快的方法
+# nand2tertris加速
 
 1. 多層次快取
 	- 因為dram比CPU慢，指令集必須向快取看齊
