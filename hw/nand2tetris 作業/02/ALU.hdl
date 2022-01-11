@@ -42,28 +42,36 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-    // Pre-setting the x input
-    Mux16(a=x,  b=false,  sel=zx, out=x1);    // if (zx == 1) set x = 0  
-    Not16(in=x1,out=notx1);
-    Mux16(a=x1, b=notx1, sel=nx, out=x2);     // if (nx == 1) set x = !x
-    
-    // Pre-setting the y input
-    Mux16(a=y,  b=false,  sel=zy, out=y1);    // if (zy == 1) set y = 0
-    Not16(in=y1,out=noty1);
-    Mux16(a=y1, b=noty1, sel=ny, out=y2);     // if (ny == 1) set y = !y
-    
-    // Selecting between computing + or &
-    Add16(a=x2, b=y2, out=addxy);             // addxy = x + y
-    And16(a=x2, b=y2, out=andxy);             // andxy = x & y
-    Mux16(a=andxy, b=addxy, sel=f, out=o1);   // if (f == 1)  set out = x + y else set out = x & y
-    
-    // Post-setting the output
-    Not16(in=o1, out=noto1);                  // noto1 = !o1
-    Mux16(a=o1, b=noto1, sel=no, out=out    , out[0..7]=outLeft, out[8..15]=outRight, out[15]=ng);  // if (no == 1) set out = !out
-    
-    // Extend it to also compute zr and ng. (ref: Two's complement)
-    Or8Way(in=outLeft, out=orLeft);      // orLeft= Or(out[0..7]);
-    Or8Way(in=outRight, out=orRight);    // orRight = Or(out[8..15]);
-    Or(a=orLeft, b=orRight, out=notzr);  // nzr = Or(out[0..15]);
-    Not(in=notzr, out=zr);             // zr = !nzr
+    // if zx then x = 0
+    Mux16(a = x, b[0..15] = false, sel = zx, out = ozx);
+
+    // if nx then x = !x
+    Not16(in = ozx, out = nnx);
+    Mux16(a = ozx, b = nnx, sel = nx, out = exx);
+
+    // if zy then y = 0
+    Mux16(a = y, b[0..15] = false, sel = zy, out = ozy);
+
+    // if ny then y = !y
+    Not16(in = ozy, out = nny);
+    Mux16(a = ozy, b = nny, sel = ny, out = exy);
+
+    // if f then out = x + y
+    //      else out = x & y
+    Add16(a = exx, b = exy, out = xplusy);
+    And16(a = exx, b = exy, out = xandy);
+    Mux16(a = xandy, b = xplusy, sel = f, out = fxy);
+
+    // if no then out = !out
+    Not16(in = fxy, out = nfxy);
+    Mux16(a = fxy, b = nfxy, sel = no, out[0..7] = ret0, out[8..14] = ret1, out[15] = retsign, out = out);
+
+    Or8Way(in[0..7] = ret0, out = ret0is0);
+    Or8Way(in[0..6] = ret1, in[7] = retsign, out = ret1is0);
+
+    Or(a = ret0is0, b = ret1is0, out = yzr);
+    Not(in = yzr, out = zr);
+
+    // if out < 0 then ng = 1 else ng = 0
+    And(a = retsign, b = true, out = ng);
 }
