@@ -40,8 +40,9 @@
 ```
 - 移位：自己加自己
 
-
 ## 補充  IEEE 754 對齊
+
+![](https://github.com/al2698/co110a/blob/2778051a1ef7599900669dfbaf4d5e47af85eb3c/hw/picture/IMG20211209100456.jpg)
 
 ```
 S(Significand): 這個值1代表為正數、0代表負數
