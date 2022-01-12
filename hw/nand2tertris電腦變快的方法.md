@@ -1,6 +1,6 @@
 來源申明：
 
-1. nand2tertris加速：12/9 到教室上課表記
+1. nand2tertris加速：12/9 到教室上課筆記
    - pipline 參考網站：[wikipedia](https://zh.wikipedia.org/wiki/%E6%8C%87%E4%BB%A4%E7%AE%A1%E7%B7%9A%E5%8C%96)
    - Hyper-Threading 參考網站：[中文百科](https://www.newton.com.tw/wiki/Hyper-Threading)、[intel](https://www.intel.com.tw/content/www/tw/zh/gaming/resources/hyper-threading.html)
    - 浮點數計算 參考網站：[osc_vnopwmym筆記](https://www.gushiciku.cn/pl/pFUb/zh-tw)
